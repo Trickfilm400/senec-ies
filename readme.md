@@ -1,12 +1,32 @@
-```javascript
-let z = new DataValidation(10, 2);
-let i = 10;
-const adder = setInterval(() => {
-   //const value = Math.random() >= 0.95 ? (i+=0.001)+2 : i+=0.001;
-   const value = Math.random() >= 0.95 ? i=0 : i+=0.001;
-   console.log(i, value, z.checkValue(value));
-   z.addValue(i)
-}, 1000);
+# senec-ies
+
+This NPM package provides a full nodejs-api for senec.ies devices to fetch the data.
+
+## Usage
+
+- Install NPM package from GitHub.
+- Function return a Promise
+
+## Example
+
+```typescript
 
 
+import SenecIES from "@trickfilm400/senec-ies";
+
+const client = new SenecIES("<IP / Host of device");
+
+client.handleSenec().then((res) => {
+    console.log(res);
+    /*
+    * {
+        responseSchema: EnergyValues;
+        validPacket: boolean;
+      }
+    *
+    *
+    */
+}).catch(console.error);
 ```
+
+© 2022 Trickfilm400
