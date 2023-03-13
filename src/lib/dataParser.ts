@@ -1,6 +1,7 @@
 import {xml2js} from "xml-js";
 import {ResponseSchema} from "../interfaces/ResponseSchema";
 import {EnergyValues} from "../interfaces/EnergyValues";
+import {StatusStrings} from "./StatusStrings";
 
 export class DataParser {
     static parseXML(xml: string): ResponseSchema {
@@ -30,7 +31,8 @@ export class DataParser {
                 BatteryDischarge: null,
                 GridImport: null,
                 HouseConsumption: null
-            }
+            },
+            StatusString: StatusStrings[xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Status.SystemState").v._text]
         };
         //loop over array and parse values into json to save and return it
         filteredArray.forEach(el => {

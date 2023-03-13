@@ -1,6 +1,7 @@
 export interface EnergyValues {
     Energy: EnergyValuesPlain<number>,
-    Power: EnergyValuesPlain<number>
+    Power: EnergyValuesPlain<number>,
+    StatusString: string
 }
 
 
