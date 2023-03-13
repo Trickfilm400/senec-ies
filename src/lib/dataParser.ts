@@ -32,6 +32,11 @@ export class DataParser {
                 GridImport: null,
                 HouseConsumption: null
             },
+            Battery: {
+                Current: parseInt(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Battery.Current").v._text),
+                Voltage: parseInt(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Battery.Voltage").v._text),
+                FuelGauge: parseInt(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Battery.FuelGauge").v._text)
+            },
             StatusString: StatusStrings[xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Status.SystemState").v._text]
         };
         //loop over array and parse values into json to save and return it
