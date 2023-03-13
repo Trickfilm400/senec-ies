@@ -33,9 +33,9 @@ export class DataParser {
                 HouseConsumption: null
             },
             Battery: {
-                Current: parseInt(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Battery.Current").v._text),
-                Voltage: parseInt(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Battery.Voltage").v._text),
-                FuelGauge: parseInt(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Battery.FuelGauge").v._text)
+                Current: parseFloat(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Battery.Current").v._text),
+                Voltage: parseFloat(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Battery.Voltage").v._text),
+                FuelGauge: parseFloat(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Battery.FuelGauge").v._text)
             },
             StatusString: StatusStrings[xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Status.SystemState").v._text]
         };
