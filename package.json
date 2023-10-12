@@ -11,7 +11,7 @@
   "author": "Nico W. <info@ni-wa.de> (https://trickfilm400.de/)",
   "license": "MIT",
   "dependencies": {
-     "axios": "^1.5.1",
+    "axios": "^1.5.1",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
@@ -21,5 +21,9 @@
     "nyc": "^15.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
+  },
+  "repository": {
+    "url": "https://github.com/Trickfilm400/senec-ies",
+    "type": "git"
   }
 }
