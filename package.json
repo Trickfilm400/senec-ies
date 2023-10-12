@@ -1,6 +1,6 @@
 {
   "name": "@trickfilm400/senec-ies",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
   "types": "types/types.d.ts",
