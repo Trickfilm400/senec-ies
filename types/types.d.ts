@@ -79,6 +79,12 @@ export interface ResponseSchema {
 export interface EnergyValues {
     Energy: EnergyValuesPlain<number>;
     Power: EnergyValuesPlain<number>;
+    StatusString: string;
+    Battery: {
+        Current: number;
+        Voltage: number;
+        FuelGauge: number;
+    };
 }
 
 export interface EnergyValuesPlain<T> {
@@ -89,3 +95,10 @@ export interface EnergyValuesPlain<T> {
     HouseConsumption: T;
     PVGenerated: T;
 }
+
+
+
+/**
+ * Copied from Senec.IES Web application via dev-tools
+ */
+export declare const StatusStrings: Record<string, string>;

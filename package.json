@@ -11,16 +11,18 @@
   "author": "Nico W. <info@ni-wa.de> (https://trickfilm400.de/)",
   "license": "MIT",
   "dependencies": {
-    "axios": "^1.7.2",
+    "axios": "^1.7.9",
+    "npm": "^11.0.0",
+    "upgrade": "^1.1.0",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^20.14.2",
-    "mocha": "^10.4.0",
-    "nyc": "^17.0.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.17.10",
+    "mocha": "^11.0.2",
+    "nyc": "^17.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.7.2"
   },
   "repository": {
     "url": "https://github.com/Trickfilm400/senec-ies",
