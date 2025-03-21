@@ -10,13 +10,11 @@ This NPM package provides a full nodejs-api for senec.ies devices to fetch the d
 ## Example
 
 ```typescript
-
-
 import SenecIES from "@trickfilm400/senec-ies";
 
 const client = new SenecIES("<IP / Host of device");
 
-client.handleSenec().then((res) => {
+client.getValues().then((res) => {
     console.log(res);
     /*
     * {
@@ -29,4 +27,4 @@ client.handleSenec().then((res) => {
 }).catch(console.error);
 ```
 
-© 2022 Trickfilm400
+© 2022-2025 Trickfilm400

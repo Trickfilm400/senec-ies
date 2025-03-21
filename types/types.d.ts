@@ -1,17 +1,18 @@
 export declare class SenecIES {
-    private readonly options;
+    private host;
     private readonly DataValidationMaxValues;
     private readonly DataValidationOffset;
     private DataValidationCalcLS;
     private SENECDataValidation;
-
     constructor(host: string);
-
-    handleSenec(): Promise<{
+    getValues(): Promise<{
         responseSchema: EnergyValues;
         validPacket: boolean;
     }>;
+    startCharging(load: number): Promise<string>;
+    stopCharging(): Promise<string>;
 }
+
 
 
 /**
@@ -23,29 +24,25 @@ export declare class DataValidation {
     private params;
     private xData;
     private yData;
-
     /**
      * @param maxValues - Max Values used for calculation
      * @param t Max difference between calculation and value to test
      */
     constructor(maxValues: number, t: number);
-
     private static cov;
     private calcLS;
-
     addValue(value: number, calcLS?: boolean): void;
-
     private predicted;
-
     checkValue(value: number): number;
 }
 
 
+
 export declare class DataParser {
     static parseXML(xml: string): ResponseSchema;
-
     static parseData(xml: ResponseSchema): null | EnergyValues;
 }
+
 
 
 export interface ResponseSchema {
@@ -76,6 +73,7 @@ export interface ResponseSchema {
 }
 
 
+
 export interface EnergyValues {
     Energy: EnergyValuesPlain<number>;
     Power: EnergyValuesPlain<number>;
@@ -85,8 +83,12 @@ export interface EnergyValues {
         Voltage: number;
         FuelGauge: number;
     };
+    TestCharge: {
+        Charge: any;
+        Discharge: any;
+        PowerOffset: any;
+    };
 }
-
 export interface EnergyValuesPlain<T> {
     BatteryCharge: T;
     BatteryDischarge: T;
@@ -95,6 +97,7 @@ export interface EnergyValuesPlain<T> {
     HouseConsumption: T;
     PVGenerated: T;
 }
+
 
 
 

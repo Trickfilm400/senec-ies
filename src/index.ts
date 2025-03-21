@@ -1,13 +1,9 @@
-import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
 import {DataParser} from "./lib/dataParser";
 import {EnergyValuesPlain} from "./interfaces/EnergyValues";
 import {DataValidation} from "./lib/DataValidation";
 
 
 export class SenecIES {
-
-    private readonly options: AxiosRequestConfig;
-    //
     private readonly DataValidationMaxValues = 10;
     private readonly DataValidationOffset = 2;
     //count to 5, then calculate new
@@ -22,26 +18,21 @@ export class SenecIES {
     };
 
     //configure request parameters
-    constructor(host: string) {
-        this.options =
-            {
-                method: "POST",
-                timeout: 2000,
-                //headers: {'Access-Control-Allow-Origin': 'http://localhost:8888'},
-                url: `http://${host}/cgi-bin/ILRReadValues.exe`,
-                data: '<body><version>1.0</version><client>IMasterPhoenix5_14_05</client><client_ver>5.14.0501</client_ver><item_list_size></item_list_size><item_list_size>23</item_list_size><item_list><i><n>@GV.RTC_SECONDS</n></i><i><n>@GV.GuiData.OverView.Energy.HouseConsumption</n></i><i><n>@GV.GuiData.OverView.Power.HouseConsumption</n></i><i><n>@GV.GuiData.OverView.Energy.BatteryCharge</n></i><i><n>@GV.GuiData.OverView.Power.BatteryCharge</n></i><i><n>@GV.GuiData.OverView.Energy.GridImport</n></i><i><n>@GV.GuiData.OverView.Power.GridImport</n></i><i><n>@GV.GuiData.OverView.Energy.PVGenerated</n></i><i><n>@GV.GuiData.OverView.Power.PVGenerated</n></i><i><n>@GV.GuiData.OverView.Energy.BatteryDischarge</n></i><i><n>@GV.GuiData.OverView.Power.BatteryDischarge</n></i><i><n>@GV.GuiData.OverView.Energy.GridExport</n></i><i><n>@GV.GuiData.OverView.Power.GridExport</n></i><i><n>@GV.GuiData.DateConfig.DateString</n></i><i><n>@GV.GuiData.Status.SystemState</n></i><i><n>@GV.PLCMODE_RUN</n></i><i><n>@GV.GuiData.Login.userLevel</n></i><i><n>@GV.GuiData.Status.LicenseIsOk</n></i><i><n>@GV.GuiData.Status.SerialNumber</n></i><i><n>@GV.GuiData.Configuration.ConfigMissing</n></i><i><n>@GV.GuiData.Configuration.RunWizard</n></i><i><n>@GV.GuiData.Status.MaintenanceRequired</n></i><i><n>@GV.GuiData.Network.UpdateStatus</n></i><i><n>@GV.GuiData.Battery.Current</n></i><i><n>@GV.GuiData.Battery.Voltage</n></i><i><n>@GV.GuiData.Battery.FuelGauge</n></i></item_list></body>'
-            };
-    }
+    constructor(private host: string) {}
 
-    async handleSenec() {
+    async getValues() {
         try {
-            const data: AxiosResponse<string> = await axios(this.options);
-            if (!data?.data) {
+            const obj = await fetch(`http://${this.host}/cgi-bin/ILRReadValues.exe`, {
+                method: "POST",
+                body: "<body><version>1.0</version><client>IMasterPhoenix5_14_05</client><client_ver>5.14.0501</client_ver><item_list_size></item_list_size><item_list_size>26</item_list_size><item_list><i><n>@GV.RTC_SECONDS</n></i><i><n>@GV.GuiData.OverView.Energy.HouseConsumption</n></i><i><n>@GV.GuiData.OverView.Power.HouseConsumption</n></i><i><n>@GV.GuiData.OverView.Energy.BatteryCharge</n></i><i><n>@GV.GuiData.OverView.Power.BatteryCharge</n></i><i><n>@GV.GuiData.OverView.Energy.GridImport</n></i><i><n>@GV.GuiData.OverView.Power.GridImport</n></i><i><n>@GV.GuiData.OverView.Energy.PVGenerated</n></i><i><n>@GV.GuiData.OverView.Power.PVGenerated</n></i><i><n>@GV.GuiData.OverView.Energy.BatteryDischarge</n></i><i><n>@GV.GuiData.OverView.Power.BatteryDischarge</n></i><i><n>@GV.GuiData.OverView.Energy.GridExport</n></i><i><n>@GV.GuiData.OverView.Power.GridExport</n></i><i><n>@GV.GuiData.DateConfig.DateString</n></i><i><n>@GV.GuiData.Status.SystemState</n></i><i><n>@GV.PLCMODE_RUN</n></i><i><n>@GV.GuiData.Login.userLevel</n></i><i><n>@GV.GuiData.Status.LicenseIsOk</n></i><i><n>@GV.GuiData.Status.SerialNumber</n></i><i><n>@GV.GuiData.Configuration.ConfigMissing</n></i><i><n>@GV.GuiData.Configuration.RunWizard</n></i><i><n>@GV.GuiData.Status.MaintenanceRequired</n></i><i><n>@GV.GuiData.Network.UpdateStatus</n></i><i><n>@GV.GuiData.Battery.Current</n></i><i><n>@GV.GuiData.Battery.Voltage</n></i><i><n>@GV.GuiData.Battery.FuelGauge</n></i><i><n>@GV.GuiData.TestCharge.Charge</n></i><i><n>@GV.GuiData.TestCharge.PowerOffset</n></i><i><n>@GV.GuiData.TestCharge.Discharge</n></i></item_list></body>"
+            })
+            const data = await obj.text()
+            if (!data) {
                 console.error(data);
-                throw new Error(data.data);
+                throw new Error(data);
             }
             //parse data for sending
-            const responseSchema = DataParser.parseData(DataParser.parseXML(data.data));
+            const responseSchema = DataParser.parseData(DataParser.parseXML(data));
             //DataValidation
             let key: keyof EnergyValuesPlain<number>;
             //will be false if NULL was in packet values
@@ -63,5 +54,19 @@ export class SenecIES {
         } catch (e) {
             throw new Error(e.message);
         }
+    }
+    //load in watt
+    async startCharging(load: number) {
+        if (isNaN(load)) return null;
+        return fetch(`http://${this.host}/cgi-bin/writeVal.exe?@GV.GuiData.TestCharge.PowerOffset+${load}`, {
+            method: "GET",
+        }).then(res => res.json()).then(data => {
+            //console.log(data)
+        }).then(() => {
+            return fetch(`http://${this.host}/cgi-bin/writeVal.exe?@GV.GuiData.TestCharge.Button_Charge+1`)
+        }).then(obj => obj.text())
+    }
+    async stopCharging() {
+        return fetch(`http://${this.host}/cgi-bin/writeVal.exe?@GV.GuiData.TestCharge.Button_Charge+1`).then(obj => obj.text())
     }
 }

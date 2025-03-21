@@ -6,6 +6,11 @@ export interface EnergyValues {
         Current: number,
         Voltage: number,
         FuelGauge: number,
+    },
+    TestCharge: {
+        Charge: any,
+        Discharge: any,
+        PowerOffset: any
     }
 }
 

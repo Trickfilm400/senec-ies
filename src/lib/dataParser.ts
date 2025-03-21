@@ -37,6 +37,11 @@ export class DataParser {
                 Voltage: parseFloat(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Battery.Voltage").v._text),
                 FuelGauge: parseFloat(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Battery.FuelGauge").v._text)
             },
+            TestCharge: {
+                Charge: xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.TestCharge.Charge").v._text === "1",
+                Discharge: xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.TestCharge.Discharge").v._text === "1",
+                PowerOffset: parseInt(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.TestCharge.PowerOffset").v._text)
+            },
             StatusString: StatusStrings[xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Status.SystemState").v._text]
         };
         //loop over array and parse values into json to save and return it
