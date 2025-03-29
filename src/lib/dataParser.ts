@@ -42,7 +42,8 @@ export class DataParser {
                 Discharge: xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.TestCharge.Discharge").v._text === "1",
                 PowerOffset: parseInt(xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.TestCharge.PowerOffset").v._text)
             },
-            StatusString: StatusStrings[xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Status.SystemState").v._text]
+            StatusString: StatusStrings[xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Status.SystemState").v._text],
+            loginLevel: xml.body.item_list.i.find(el => el.n._text === "@GV.GuiData.Login.userLevel").v._text
         };
         //loop over array and parse values into json to save and return it
         filteredArray.forEach(el => {

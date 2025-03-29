@@ -24,7 +24,7 @@ export class SenecIES {
         try {
             const obj = await fetch(`http://${this.host}/cgi-bin/ILRReadValues.exe`, {
                 method: "POST",
-                body: "<body><version>1.0</version><client>IMasterPhoenix5_14_05</client><client_ver>5.14.0501</client_ver><item_list_size></item_list_size><item_list_size>26</item_list_size><item_list><i><n>@GV.RTC_SECONDS</n></i><i><n>@GV.GuiData.OverView.Energy.HouseConsumption</n></i><i><n>@GV.GuiData.OverView.Power.HouseConsumption</n></i><i><n>@GV.GuiData.OverView.Energy.BatteryCharge</n></i><i><n>@GV.GuiData.OverView.Power.BatteryCharge</n></i><i><n>@GV.GuiData.OverView.Energy.GridImport</n></i><i><n>@GV.GuiData.OverView.Power.GridImport</n></i><i><n>@GV.GuiData.OverView.Energy.PVGenerated</n></i><i><n>@GV.GuiData.OverView.Power.PVGenerated</n></i><i><n>@GV.GuiData.OverView.Energy.BatteryDischarge</n></i><i><n>@GV.GuiData.OverView.Power.BatteryDischarge</n></i><i><n>@GV.GuiData.OverView.Energy.GridExport</n></i><i><n>@GV.GuiData.OverView.Power.GridExport</n></i><i><n>@GV.GuiData.DateConfig.DateString</n></i><i><n>@GV.GuiData.Status.SystemState</n></i><i><n>@GV.PLCMODE_RUN</n></i><i><n>@GV.GuiData.Login.userLevel</n></i><i><n>@GV.GuiData.Status.LicenseIsOk</n></i><i><n>@GV.GuiData.Status.SerialNumber</n></i><i><n>@GV.GuiData.Configuration.ConfigMissing</n></i><i><n>@GV.GuiData.Configuration.RunWizard</n></i><i><n>@GV.GuiData.Status.MaintenanceRequired</n></i><i><n>@GV.GuiData.Network.UpdateStatus</n></i><i><n>@GV.GuiData.Battery.Current</n></i><i><n>@GV.GuiData.Battery.Voltage</n></i><i><n>@GV.GuiData.Battery.FuelGauge</n></i><i><n>@GV.GuiData.TestCharge.Charge</n></i><i><n>@GV.GuiData.TestCharge.PowerOffset</n></i><i><n>@GV.GuiData.TestCharge.Discharge</n></i></item_list></body>"
+                body: "<body><version>1.0</version><client>IMasterPhoenix5_14_05</client><client_ver>5.14.0501</client_ver><item_list_size></item_list_size><item_list_size>26</item_list_size><item_list><i><n>@GV.RTC_SECONDS</n></i><i><n>@GV.GuiData.OverView.Energy.HouseConsumption</n></i><i><n>@GV.GuiData.OverView.Power.HouseConsumption</n></i><i><n>@GV.GuiData.OverView.Energy.BatteryCharge</n></i><i><n>@GV.GuiData.OverView.Power.BatteryCharge</n></i><i><n>@GV.GuiData.OverView.Energy.GridImport</n></i><i><n>@GV.GuiData.OverView.Power.GridImport</n></i><i><n>@GV.GuiData.OverView.Energy.PVGenerated</n></i><i><n>@GV.GuiData.OverView.Power.PVGenerated</n></i><i><n>@GV.GuiData.OverView.Energy.BatteryDischarge</n></i><i><n>@GV.GuiData.OverView.Power.BatteryDischarge</n></i><i><n>@GV.GuiData.OverView.Energy.GridExport</n></i><i><n>@GV.GuiData.OverView.Power.GridExport</n></i><i><n>@GV.GuiData.DateConfig.DateString</n></i><i><n>@GV.GuiData.Status.SystemState</n></i><i><n>@GV.PLCMODE_RUN</n></i><i><n>@GV.GuiData.Login.userLevel</n></i><i><n>@GV.GuiData.Status.LicenseIsOk</n></i><i><n>@GV.GuiData.Status.SerialNumber</n></i><i><n>@GV.GuiData.Configuration.ConfigMissing</n></i><i><n>@GV.GuiData.Configuration.RunWizard</n></i><i><n>@GV.GuiData.Status.MaintenanceRequired</n></i><i><n>@GV.GuiData.Network.UpdateStatus</n></i><i><n>@GV.GuiData.Battery.Current</n></i><i><n>@GV.GuiData.Battery.Voltage</n></i><i><n>@GV.GuiData.Battery.FuelGauge</n></i><i><n>@GV.GuiData.TestCharge.Charge</n></i><i><n>@GV.GuiData.TestCharge.PowerOffset</n></i><i><n>@GV.GuiData.TestCharge.Discharge</n></i><i><n>@GV.GuiData.Login.userLevel</n></i></item_list></body>"
             })
             const data = await obj.text()
             if (!data) {
@@ -55,6 +55,12 @@ export class SenecIES {
             throw new Error(e.message);
         }
     }
+    async setTestChargeLoad(load: number) {
+        if (isNaN(load)) return null;
+        return fetch(`http://${this.host}/cgi-bin/writeVal.exe?@GV.GuiData.TestCharge.PowerOffset+${load}`, {
+            method: "GET",
+        })
+    }
     //load in watt
     async startCharging(load: number) {
         if (isNaN(load)) return null;
@@ -68,5 +74,10 @@ export class SenecIES {
     }
     async stopCharging() {
         return fetch(`http://${this.host}/cgi-bin/writeVal.exe?@GV.GuiData.TestCharge.Button_Charge+1`).then(obj => obj.text())
+    }
+    async login(username: string, password: string) {
+        return fetch(`http://${this.host}/cgi-bin/writeVal.exe?@GV.GuiData.Login.UserName+${username}`).then(() =>
+        fetch(`http://${this.host}/cgi-bin/writeVal.exe?@GV.GuiData.Login.Password+${password}`).then(() =>
+        fetch(`http://${this.host}/cgi-bin/writeVal.exe?@GV.GuiData.Login.LoginUser+1`)))
     }
 }

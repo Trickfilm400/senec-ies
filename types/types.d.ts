@@ -9,8 +9,10 @@ export declare class SenecIES {
         responseSchema: EnergyValues;
         validPacket: boolean;
     }>;
+    setTestChargeLoad(load: number): Promise<Response>;
     startCharging(load: number): Promise<string>;
     stopCharging(): Promise<string>;
+    login(username: string, password: string): Promise<Response>;
 }
 
 
@@ -78,6 +80,7 @@ export interface EnergyValues {
     Energy: EnergyValuesPlain<number>;
     Power: EnergyValuesPlain<number>;
     StatusString: string;
+    loginLevel: string;
     Battery: {
         Current: number;
         Voltage: number;

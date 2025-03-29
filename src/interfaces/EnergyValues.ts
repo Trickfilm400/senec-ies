@@ -2,6 +2,7 @@ export interface EnergyValues {
     Energy: EnergyValuesPlain<number>,
     Power: EnergyValuesPlain<number>,
     StatusString: string,
+    loginLevel: string,
     Battery: {
         Current: number,
         Voltage: number,
